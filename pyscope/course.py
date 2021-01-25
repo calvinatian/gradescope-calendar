@@ -53,8 +53,12 @@ class GSCourse():
             if GSRole.to_str(person.role) != 'Student':
                 continue
             ret += person.email
-            for _, grade in self.grades[pindex].items(): # TODO: need to ensure order of assignments is globally the same
-                ret += ',' + grade.score
+            # For each assignment, add the users grade or 0
+            for _, assignment in self.assignments.items():
+                try:
+                    ret += ',' + self.grades[pindex][assignment.name].score
+                except:
+                    ret += ',0'
             ret += '\n'
         return ret
 
