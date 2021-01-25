@@ -29,6 +29,9 @@ class GSCourse():
         self.roster = {} # TODO: Maybe shouldn't dict. 
         self.state = set() # Set of already loaded entitites (TODO what is the pythonic way to do this?)
 
+    def __str__(self):
+        return self.shortname + ' (' + self.cid + ') ' + self.name
+
     # ~~~~~~~~~~~~~~~~~~~~~~PEOPLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     def add_person(self, name, email, role, sid = None, notify = False):
@@ -204,7 +207,7 @@ class GSCourse():
         for row in roster_table:
             name = row[0].text.rsplit(' ', 1)[0]
             data_id = row[0].find('button', class_ = 'rosterCell--editIcon').get('data-id')
-            if len(row) == 6:
+            if len(row) == 7: # TODO: Adjusted to 7 columns
                 email = row[1].text
                 role = row[2].find('option', selected="selected").text
                 submissions = int(row[3].text)

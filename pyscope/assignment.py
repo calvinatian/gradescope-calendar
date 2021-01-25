@@ -19,6 +19,9 @@ class GSAssignment():
         self.course = course
         self.questions = []
 
+    def __str__(self):
+        return self.name + ' (' + self.aid + ') Course: ' + self.course.name + '\t| Points: ' + self.points
+
     def add_question(self, title, weight, crop = None, content = [], parent_id = None):
         new_q_data = [q.to_patch() for q in self.questions]
         new_crop = crop if crop else [{'x1': 10, 'x2': 91, 'y1': 73, 'y2': 93, 'page_number': 1}]

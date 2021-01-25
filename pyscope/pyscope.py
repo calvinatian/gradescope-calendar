@@ -68,7 +68,10 @@ class GSConnection():
 
         # Get instructor course data
         instructor_courses = parsed_account_resp.find('h1', class_ ='pageHeading').next_sibling
-        
+        # TODO: Brittle selection of course names
+        if instructor_courses.text == 'Everything you need to know about Gradescope is in our Getting Started guide.':
+            instructor_courses = instructor_courses.next_sibling
+
         for course in instructor_courses.find_all('a', class_ = 'courseBox'):
             shortname = course.find('h3', class_ = 'courseBox--shortname').text
             name = course.find('h4', class_ = 'courseBox--name').text
@@ -83,23 +86,45 @@ class GSConnection():
                 return False # Should probably raise an exception.
             self.account.add_class(cid, name, shortname, year, instructor = True)
 
-        student_courses = parsed_account_resp.find('h1', class_ ='pageHeading', string = "Student Courses").next_sibling
-        for course in student_courses.find_all('a', class_ = 'courseBox'):
-            shortname = course.find('h3', class_ = 'courseBox--shortname').text
-            name = course.find('h4', class_ = 'courseBox--name').text
-            cid = course.get("href").split("/")[-1]
-            
-            for tag in course.parent.previous_siblings:
-                if tag.get("class") == "courseList--term pageSubheading":
-                    year = tag.body
-                    break
-            if year is None:
-                return False # Should probably raise an exception.
-            self.account.add_class(cid, name, shortname, year)
+        try:
+            student_courses = parsed_account_resp.find('h1', class_ ='pageHeading', string = "Student Courses").next_sibling
+            for course in student_courses.find_all('a', class_ = 'courseBox'):
+                shortname = course.find('h3', class_ = 'courseBox--shortname').text
+                name = course.find('h4', class_ = 'courseBox--name').text
+                cid = course.get("href").split("/")[-1]
+                print(cid, name, shortname)
+
+                for tag in course.parent.previous_siblings:
+                    if tag.get("class") == "courseList--term pageSubheading":
+                        year = tag.body
+                        break
+                if year is None:
+                    return False # Should probably raise an exception.
+                self.account.add_class(cid, name, shortname, year)
+        except:
+            print('No student classes')
 
 # THIS IS STRICTLY FOR DEVELOPMENT TESTING :( Sorry for leaving it in.
 if __name__=="__main__":
     conn = GSConnection()
-    conn.login("email", "password")
+    conn.login("email", "pass")
+
     print(conn.state)
     conn.get_account()
+    
+    for cnum in conn.account.instructor_courses:
+        course = conn.account.instructor_courses[cnum]
+        print('\n### Course Name: ' + course.name)
+        print(str(course))
+
+        course._lazy_load_assignments()
+        print('\n--Assignments--')
+        print(course.assignments)
+        for anum in course.assignments:
+            print(str(course.assignments[anum]))
+
+        course._lazy_load_roster()
+        print('\n--Roster--')
+        print(course.roster)
+        for pnum in course.roster:
+            print(str(course.roster[pnum]))

@@ -33,7 +33,7 @@ class GSRole(Enum):
     class GSRoleException(Exception):
         pass
     
-    
+    # TODO: there are more now two linked terms (blackboard + brightspace)
 class GSPerson():
     def __init__(self, name, data_id, email, role, submissions, linked):
         self.name = name
@@ -42,3 +42,6 @@ class GSPerson():
         self.role = GSRole.from_str(role)
         self.linked = linked
         self.submissions = submissions
+    
+    def __str__(self):
+        return self.name + ' (' + GSRole.to_str(self.role) + ') ' + self.email
