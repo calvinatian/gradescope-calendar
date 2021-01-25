@@ -44,4 +44,4 @@ class GSPerson():
         self.submissions = submissions
     
     def __str__(self):
-        return self.name + ' (' + GSRole.to_str(self.role) + ') ' + self.email
+        return '[#Person# ' + self.name + ' (' + self.data_id + ' | ' + GSRole.to_str(self.role) + ') ' + self.email + ']'

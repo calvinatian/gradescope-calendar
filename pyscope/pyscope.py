@@ -107,7 +107,7 @@ class GSConnection():
 # THIS IS STRICTLY FOR DEVELOPMENT TESTING :( Sorry for leaving it in.
 if __name__=="__main__":
     conn = GSConnection()
-    conn.login("email", "pass")
+    #conn.login("email", "pass")
 
     print(conn.state)
     conn.get_account()
@@ -117,14 +117,25 @@ if __name__=="__main__":
         print('\n### Course Name: ' + course.name)
         print(str(course))
 
-        course._lazy_load_assignments()
+        course._force_load_data()
+
         print('\n--Assignments--')
         print(course.assignments)
-        for anum in course.assignments:
-            print(str(course.assignments[anum]))
+        for _, assign in course.assignments.items():
+            print(str(assign))
 
-        course._lazy_load_roster()
         print('\n--Roster--')
         print(course.roster)
-        for pnum in course.roster:
-            print(str(course.roster[pnum]))
+        for _, person in course.roster.items():
+            print(str(person))
+
+        print('\n--Grades--')
+        print(course.grades)
+        for _, person in course.grades.items():
+            for _, grade in person.items():
+                print(str(grade))
+
+        print()
+        print(course.get_grades())
+
+        

@@ -1,3 +1,4 @@
+import json, time
 from enum import Enum
 from bs4 import BeautifulSoup
 try:
@@ -10,11 +11,15 @@ try:
    from assignment import GSAssignment
 except ModuleNotFoundError:
    from .assignment import GSAssignment
-
+try:
+   from grade import GSGrade
+except ModuleNotFoundError:
+   from .grade import GSGrade
 
 class LoadedCapabilities(Enum):
     ASSIGNMENTS = 0
     ROSTER = 1
+    GRADES = 2
 
 class GSCourse():
 
@@ -27,10 +32,31 @@ class GSCourse():
         self.session = session
         self.assignments = {}
         self.roster = {} # TODO: Maybe shouldn't dict. 
+        self.grades = {}
         self.state = set() # Set of already loaded entitites (TODO what is the pythonic way to do this?)
 
     def __str__(self):
-        return self.shortname + ' (' + self.cid + ') ' + self.name
+        return '[#Course# ' + self.shortname + ' (' + self.cid + ') ' + self.name + ']'
+
+    def get_grades(self):
+        '''
+        Returns a CSV file of the gradebook
+        '''
+        # Handles CSV headers
+        ret = 'username'
+        for _, assignment in self.assignments.items():
+            ret += ',' + assignment.name
+        ret += '\n'
+        # Handles each student's grades
+        for pindex, person in self.roster.items():
+            # Check if we are looking at a student or professor. TODO: Do professors have grades in gradescope?
+            if GSRole.to_str(person.role) != 'Student':
+                continue
+            ret += person.email
+            for _, grade in self.grades[pindex].items(): # TODO: need to ensure order of assignments is globally the same
+                ret += ',' + grade.score
+            ret += '\n'
+        return ret
 
     # ~~~~~~~~~~~~~~~~~~~~~~PEOPLE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -191,7 +217,7 @@ class GSCourse():
 
     def _lazy_load_roster(self):
         '''
-        Load the roster list  This is done lazily to avoid slowdown caused by getting
+        Load the roster list. This is done lazily to avoid slowdown caused by getting
         all the rosters for all classes. Also makes us less vulnerable to blocking.
         '''
         membership_resp = self.session.get('https://www.gradescope.com/courses/' + self.cid + '/memberships')
@@ -218,9 +244,55 @@ class GSCourse():
                 submissions = int(row[4].text)
                 linked = True if 'statusIcon-active' in row[5].find('i').get('class') else False
             # TODO Make types reasonable.
-            self.roster[name] = GSPerson(name, data_id, email, role, submissions, linked)
+            self.roster[data_id] = GSPerson(name, data_id, email, role, submissions, linked)
         self.state.add(LoadedCapabilities.ROSTER)
         
+    def _lazy_load_grades(self):
+        '''
+        Load grades for all students. This is done lazily to avoid slowdown caused by getting
+        all the grades for all classes. Also makes us less vulnerable to blocking.
+        '''
+        print('loading grades')
+        self._check_capabilities({LoadedCapabilities.ASSIGNMENTS, LoadedCapabilities.ROSTER}) # we need data to create grades later
+        membership_resp = self.session.get('https://www.gradescope.com/courses/' + self.cid + '/memberships')
+        parsed_membership_resp = BeautifulSoup(membership_resp.text, 'html.parser')
+
+        roster_table = []
+        for student_row in parsed_membership_resp.find_all('tr', class_ = 'rosterRow'):
+            row = []
+            for td in student_row('td'):
+                row.append(td)
+            roster_table.append(row)
+        
+        for row in roster_table:
+            name = row[0].text.rsplit(' ', 1)[0]
+            data_id = row[0].find('button', class_ = 'rosterCell--editIcon').get('data-id')
+            
+            # Get url to gradebook data. Only students has a js-rosterName tag, so we skip professors
+            try:
+                grade_url = row[0].find('button', class_ = 'js-rosterName').get('data-url')
+            except:
+                continue
+            # Request gradebook data. Retry once then skip if continuing to fail
+            try:
+                gradebook_resp = self.session.get('https://www.gradescope.com' + grade_url)
+            except:
+                print('@Error - requesting grade data failed. Retrying once')
+                try: # TODO: This is a janky retry. If a roster is huge it might become an issue if we're spamming gradescope
+                    time.sleep(3)
+                    gradebook_resp = self.session.get('https://www.gradescope.com' + grade_url)
+                except:
+                    continue
+            # Parse response and create grade objects
+            parsed_gradebook_resp = BeautifulSoup(gradebook_resp.text, 'html.parser')
+            print(parsed_gradebook_resp)
+            grade_json = json.loads(parsed_gradebook_resp.text)
+            self.grades[data_id] = {} # TODO: This indexes students by their data_id. This is probably more consistant and less error prone to duplication. I should probably switch roster to this
+            for grade in grade_json:
+                assign = grade['assignment']
+                self.grades[data_id][assign['title']] = GSGrade(name, assign['title'], assign['id'], assign['total_points'], assign['submission']['score'], assign['submission']['url'])
+        self.state.add(LoadedCapabilities.GRADES)
+
     def _check_capabilities(self, needed):
         '''
         checks if we have the needed data loaded and gets them lazily.
@@ -230,6 +302,23 @@ class GSCourse():
             self._lazy_load_assignments()
         if LoadedCapabilities.ROSTER in missing:
             self._lazy_load_roster()
+        if LoadedCapabilities.GRADES in missing:
+            self._lazy_load_grades()
+    
+    def _force_load_data(self):
+        '''
+        dumps existing data and force loads it
+        '''
+        self.assignments = {}
+        self.roster = {}
+        self.grades = {}
+        self._lazy_load_assignments()
+        self._lazy_load_roster()
+        self._lazy_load_grades()
+        self.state.add(LoadedCapabilities.ASSIGNMENTS)
+        self.state.add(LoadedCapabilities.ROSTER)
+        self.state.add(LoadedCapabilities.GRADES)
+        
 
     def delete(self):
         course_edit_resp = self.session.get('https://www.gradescope.com/courses/'+self.cid+'/edit')

@@ -20,7 +20,7 @@ class GSAssignment():
         self.questions = []
 
     def __str__(self):
-        return self.name + ' (' + self.aid + ') Course: ' + self.course.name + '\t| Points: ' + self.points
+        return '[#Assignment# ' + self.name + ' (' + self.aid + ') Course: ' + self.course.name + '\t| Points: ' + self.points + ']'
 
     def add_question(self, title, weight, crop = None, content = [], parent_id = None):
         new_q_data = [q.to_patch() for q in self.questions]
