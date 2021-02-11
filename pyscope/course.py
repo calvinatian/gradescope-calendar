@@ -237,16 +237,16 @@ class GSCourse():
         for row in roster_table:
             name = row[0].text.rsplit(' ', 1)[0]
             data_id = row[0].find('button', class_ = 'rosterCell--editIcon').get('data-id')
-            if len(row) == 7: # TODO: Adjusted to 7 columns
-                email = row[1].text
-                role = row[2].find('option', selected="selected").text
-                submissions = int(row[3].text)
-                linked = True if 'statusIcon-active' in row[4].find('i').get('class') else False
-            else:
-                email = row[2].text
-                role = row[3].find('option', selected="selected").text
-                submissions = int(row[4].text)
-                linked = True if 'statusIcon-active' in row[5].find('i').get('class') else False
+            #if len(row) == 7: # TODO: Adjusted to 7 columns TODO: Clean this up
+            email = row[1].text
+            role = row[2].find('option', selected="selected").text
+            submissions = int(row[3].text)
+            linked = True if 'statusIcon-active' in row[4].find('i').get('class') else False
+            #else:
+            #    email = row[2].text
+            #    role = row[3].find('option', selected="selected").text
+            #    submissions = int(row[4].text)
+            #    linked = True if 'statusIcon-active' in row[5].find('i').get('class') else False
             # TODO Make types reasonable.
             self.roster[data_id] = GSPerson(name, data_id, email, role, submissions, linked)
         self.state.add(LoadedCapabilities.ROSTER)
