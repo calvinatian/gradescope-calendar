@@ -4,6 +4,9 @@ behaviour in an automated way as there is no official gradescope API.
 
 Some initial endpoint info was [gotten from this MIT paper](https://courses.csail.mit.edu/6.857/2016/files/20.pdf).
 
+# Forked Changes
+This fork is used to handle grade transfer between Gradescope and other platforms. Various functions and objects have been updated to handle loading grade data and outputting to a csv to be uploaded elsewhere.
+
 ## Design Philosophy
 This is _not_ an API wrapper in reality, and more of a scraping tool. Therefore a lot is done to minimize the 
 ammount of requests done. As such we do expensive things like loading rosters lazily but all at once. This means
