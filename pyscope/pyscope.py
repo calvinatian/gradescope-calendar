@@ -107,8 +107,7 @@ class GSConnection():
 # THIS IS STRICTLY FOR DEVELOPMENT TESTING :( Sorry for leaving it in.
 if __name__=="__main__":
     conn = GSConnection()
-    #conn.login("email", "pass")
-
+    conn.login(os.getenv('GRADESCOPE_EMAIL'), os.getenv('GRADESCOPE_PASSWORD'))
     print(conn.state)
     conn.get_account()
     
