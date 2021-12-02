@@ -1,55 +1,73 @@
 from bs4 import BeautifulSoup
-try:
-   from course import GSCourse
-except ModuleNotFoundError:
-   from .course import GSCourse
+from .course import GSCourse
+import requests
 
-class GSAccount():
-    '''A class designed to track the account details (instructor and student courses'''
 
-    def __init__(self, email, session):
-        self.email = email
+class GSAccount:
+    """A class used to govern Gradescope accounts.
+
+    Attributes
+    ----------
+    session : requests.Session
+        the requests library Session object to manage authentication
+    courses : dict(str : GSCourse)
+        dictionary using course ID as key and GSCourse as value
+
+    Methods
+    -------
+    add_courses_in_account()
+        adds all courses available in user account
+    """
+
+    def __init__(self, session: requests.Session):
         self.session = session
-        self.instructor_courses = {}
-        self.student_courses = {}
+        self.courses = {}
 
-    def add_class(self, cid, name, shortname, year, instructor = False):
-        if instructor:
-            self.instructor_courses[cid] = GSCourse(cid, name, shortname, year, self.session)
-        else:
-            self.student_courses[cid] = GSCourse(cid, name, shortname, year, self.session)
+    def add_courses_in_account(self) -> None:
+        """Finds all courses in the current user account and adds them"""
 
-    # TODO add default exceptions when doing unsafe things.
-    def delete_class(self, cid):
-        self.instructor_courses[cid].delete()
-        del self.instructor_courses[cid]
-
-    def create_course(self, name, shortname, description, term, year, school, entry_code_enabled = False):
-        '''Returns course ID'''
+        # Get account page and parse it using bs4
         account_resp = self.session.get("https://www.gradescope.com/account")
-        parsed_account_resp = BeautifulSoup(account_resp.text, 'html.parser')
+        account_resp_parsed = BeautifulSoup(account_resp.text, "html.parser")
 
-        create_modal = parsed_account_resp.find('div', id = 'createCourseModal')
-        authenticity_token = create_modal.find('input', attrs = {'name': 'authenticity_token'}).get('value')
-        schools = create_modal.find('select', id = 'course_school_id')
-        school_id = schools.find('option', text = school).get('value') # TODO Fix this on bad params.
-        course_data = {
-            "utf8": "✓",
-            "authenticity_token": authenticity_token,
-            "course[shortname]": shortname,
-            "course[name]": name,
-            "course[description]": description,
-            "course[term]": term,
-            "course[year]": year,
-            "course[school_id]": school_id,
-            "course[entry_code_enabled]": 1 if entry_code_enabled else 0,
-            "commit": "Create Course",
-        }
-        
-        course_resp = self.session.post("https://www.gradescope.com/courses", params=course_data)
-        # TODO This is brittle
-        cid = course_resp.history[0].headers.get('Location').rsplit('/', 1)[1]
-        # TODO fix term, year union
-        self.add_class(cid, name, shortname, term+" "+year, instructor = True )
-        return cid
-        
+        # Parameters
+        ACCOUNT_COURSES_CLASS = "pageHeading"
+        ACCOUNT_COURSES_HEADING = "Your Courses"
+        COURSE_CLASS = "courseBox"
+        COURSE_SHORTNAME_CLASS = "courseBox--shortname"
+        COURSE_NAME_CLASS = "courseBox--name"
+
+        courses = account_resp_parsed.find(
+            "h1", class_=ACCOUNT_COURSES_CLASS, string=ACCOUNT_COURSES_HEADING
+        ).next_sibling
+        for course in courses.find_all("a", class_=COURSE_CLASS):
+            short_name = course.find("h3", class_=COURSE_SHORTNAME_CLASS).text
+            name = course.find("h4", class_=COURSE_NAME_CLASS).text
+            cid = course.get("href").split("/")[-1]
+            print(cid, name, short_name)
+
+            year = None
+            for tag in course.parent.previous_siblings:
+                if tag.get("class") == "courseList--term pageSubheading":
+                    year = tag.body
+                    break
+            self.add_course(cid=cid, name=name, short_name=short_name, year=year)
+
+    def add_course(self, cid: str, name: str, short_name: str, year: str) -> None:
+        """Creates a GSCourse object and adds it to the courses dictionary.
+
+        Parameters
+        ----------
+        cid : str
+            8-digit course ID
+        name : str
+            full name of the course
+        shortname : str
+            shortname of the course
+        year : str
+            year of the course
+        """
+
+        self.courses[cid] = GSCourse(
+            cid=cid, name=name, short_name=short_name, year=year, session=self.session
+        )

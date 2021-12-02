@@ -1,5 +1,16 @@
 # Custom
 *~
+credentials.json
+quickstart.py
+token.json
+old/
+.gitignore
+docs/
+setup.py
+testing.py
+.vscode/
+tests/
+pyscope/exceptions.py
 
 #### From https://github.com/github/gitignore/blob/master/Python.gitignore ####
 # Byte-compiled / optimized / DLL files
