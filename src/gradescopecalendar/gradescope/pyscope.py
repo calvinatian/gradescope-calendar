@@ -79,4 +79,4 @@ class GSConnection:
             self.state = ConnState.LOGGED_IN
             self.account = GSAccount(self.session)
             return True
-        raise Exception("Invalid credentials.")
+        raise ValueError("Invalid credentials.")

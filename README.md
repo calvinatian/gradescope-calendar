@@ -1,34 +1,42 @@
-# Gradescope API
+# Gradescope-Calendar
 
-This is an initial attempt at reverse engineering Gradescope to allow for automated submission and controlling other
-behavior in an automated way as there is no official Gradescope API.
+This script scrapes your Gradescope account for courses and assignment details. Assignment details currently can be transferred to iCalendar events (and then imported to other calendar applications such as Google Calendar). Another method exists to write these assignment details directly to a Google Calendar but requires additional setup. Scraping the Gradescope website is largely based off of the projects this is forked from.
 
-Some initial endpoint info was [gotten from this MIT paper](https://courses.csail.mit.edu/6.857/2016/files/20.pdf).
+## Requirements
 
-## Forked Changes
+* Python 3
+* Git
 
-This fork strips out features to focus on scraping assignments from courses and adding documentation.
+## Installation
 
-## Design Philosophy
+Windows
 
-This is _not_ an API wrapper in reality, and more of a scraping tool. Therefore a lot is done to minimize the amount of requests done. As such we do expensive things like loading rosters lazily but all at once. This means
-we keep a lot of data locally (which is a space cost) but that allows us to not make network calls as often and lets
-us update the local copy alongside posts.
-
-## Design Structure
-
-The primary structure used to interact with Gradescope is the `session`. This is equivalent to going to the website
-and hitting `Log In` and will give you access to the things you can access through the website normally.
-
-### Sessions
-
-```python3
-session = GSConnection()
+```bash
+git clone https://github.com/calvinatian/gradescope-calendar.git
+python -m venv .venv
+.venv/scripts/activate
+pip install -r requirements.txt
 ```
 
-This creates a session but does not do any login work. This leaves the connection in an inactive state. In order
-to activate it you can call the following:
+Mac/Linux
 
-```python3
-session.login('my@email.com', 'my_password')
+```bash
+git clone https://github.com/calvinatian/gradescope-calendar.git
+python3 -m venv .venv
+.venv/scripts/activate
+pip3 install -r requirements.txt
 ```
+
+## Usage
+
+An example script is located in `src/example.py`. Modify the `EMAIL` and `PASSWORD` fields with your Gradescope account information then run the script.
+
+```bash
+./example.py
+```
+
+## Advanced settings
+
+### Google Calendar
+
+Instructions coming soon.

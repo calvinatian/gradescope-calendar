@@ -42,6 +42,7 @@ class GSCourse:
         """Load the assignments available from the course."""
 
         EPOCHTIME = "1970-01-01 00:00:00 +0000"
+        INVALID_ASSIGNMENT_ID = "0000000"
 
         assignment_resp = self.session.get(
             f"https://www.gradescope.com/courses/{self.cid}/"
@@ -66,7 +67,7 @@ class GSCourse:
                     r"/.*/assignments/(.+?)/", row[0].find("a").get("href")
                 ).group(1)
             except (IndexError, AttributeError):
-                aid = "0000000"
+                aid = INVALID_ASSIGNMENT_ID
             try:  # Points not guaranteed
                 points = row[1].text.split(" / ")
                 points_earned = float(points[0])
@@ -94,5 +95,5 @@ class GSCourse:
                 close_date=close_date,
                 points=(points_earned, points_total),
                 regrades_on=regrades_on,
-                url=f"https://www.gradescope.com/courses/{self.cid}/assignments/{aid}/",
+                url=f"https://www.gradescope.com/courses/{self.cid}/assignments/{aid}/" if aid != INVALID_ASSIGNMENT_ID else "",
             )

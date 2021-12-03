@@ -44,7 +44,6 @@ class GSAccount:
             short_name = course.find("h3", class_=COURSE_SHORTNAME_CLASS).text
             name = course.find("h4", class_=COURSE_NAME_CLASS).text
             cid = course.get("href").split("/")[-1]
-            print(cid, name, short_name)
 
             year = None
             for tag in course.parent.previous_siblings:
