@@ -13,8 +13,9 @@ Windows
 
 ```bash
 git clone https://github.com/calvinatian/gradescope-calendar.git
+cd gradescope-calendar
 python -m venv .venv
-.venv/scripts/activate
+.venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
@@ -22,8 +23,9 @@ Mac/Linux
 
 ```bash
 git clone https://github.com/calvinatian/gradescope-calendar.git
+cd gradescope-calendar
 python3 -m venv .venv
-.venv/scripts/activate
+.venv/Scripts/activate
 pip3 install -r requirements.txt
 ```
 
