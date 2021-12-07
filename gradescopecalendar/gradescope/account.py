@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from .course import GSCourse
+from gradescopecalendar.gradescope.course import GSCourse
 import requests
 
 
@@ -17,6 +17,7 @@ class GSAccount:
     -------
     add_courses_in_account()
         adds all courses available in user account
+    add_course()
     """
 
     def __init__(self, session: requests.Session):
@@ -38,8 +39,11 @@ class GSAccount:
         COURSE_NAME_CLASS = "courseBox--name"
 
         courses = account_resp_parsed.find(
-            "h1", class_=ACCOUNT_COURSES_CLASS, string=ACCOUNT_COURSES_HEADING
+            "h1",
+            class_=ACCOUNT_COURSES_CLASS,
+            string=ACCOUNT_COURSES_HEADING,
         ).next_sibling
+
         for course in courses.find_all("a", class_=COURSE_CLASS):
             short_name = course.find("h3", class_=COURSE_SHORTNAME_CLASS).text
             name = course.find("h4", class_=COURSE_NAME_CLASS).text

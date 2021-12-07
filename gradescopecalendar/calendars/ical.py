@@ -1,6 +1,9 @@
-import os.path
+import logging
+from pathlib import Path
 from icalendar import Calendar, Event
 from icalendar import vText
+
+logger = logging.getLogger(__name__)
 
 
 class ICal:
@@ -14,7 +17,7 @@ class ICal:
         """
 
         if not path:
-            path = os.path.dirname(os.path.abspath(__file__))
+            path = Path.cwd()
 
         # Extract relevant details from assignment for calendar event
         cal = Calendar()
@@ -33,4 +36,4 @@ class ICal:
         # Write to file
         with open(f"{path}/gradescopecal.ics", "wb") as f:
             f.write(cal.to_ical())
-            print(f"Wrote file to: {path}/gradescopecal.ics")
+            logger.info(f"Wrote file to: {path}/gradescopecal.ics")

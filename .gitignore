@@ -1,16 +1,25 @@
 # Custom
-*~
+
+# Google Calendar
 credentials.json
-quickstart.py
 token.json
+
+# WIP
 old/
-.gitignore
 docs/
-setup.py
-testing.py
-.vscode/
 tests/
-pyscope/exceptions.py
+gradescopecalendar/gradescope/README.md
+gradescopecalendar/gradescope/exceptions.py
+ical_test.py
+setup.cfg
+testing.py
+
+# IDE Settings
+.vscode/
+
+# Runtime input/output
+gradescopecal.ics
+example_filled.py
 
 #### From https://github.com/github/gitignore/blob/master/Python.gitignore ####
 # Byte-compiled / optimized / DLL files

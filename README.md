@@ -9,6 +9,8 @@ This script scrapes your Gradescope account for courses and assignment details. 
 
 ## Installation
 
+### Development
+
 Windows
 
 ```bash
@@ -31,7 +33,7 @@ pip3 install -r requirements.txt
 
 ## Usage
 
-An example script is located in `src/example.py`. Modify the `EMAIL` and `PASSWORD` fields with your Gradescope account information then run the script.
+An example script is located at `example.py`. Modify the `EMAIL` and `PASSWORD` fields with your Gradescope account information then run the script.
 
 ```bash
 ./example.py
@@ -41,4 +43,6 @@ An example script is located in `src/example.py`. Modify the `EMAIL` and `PASSWO
 
 ### Google Calendar
 
-Instructions coming soon.
+1. Create new Google API Application
+2. Enable Google Calendar API
+3. ...

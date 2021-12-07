@@ -1,7 +1,7 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from .assignment import GSAssignment
+from gradescopecalendar.gradescope.assignment import GSAssignment
 
 
 class GSCourse:
@@ -36,7 +36,7 @@ class GSCourse:
         # self._load_assignments()
 
     def __str__(self) -> None:
-        return "[#Course# " + self.short_name + " (" + self.cid + ") " + self.name + "]"
+        return f"[#Course# {self.short_name} ({self.cid}) {self.name} ]"
 
     def _load_assignments(self) -> None:
         """Load the assignments available from the course."""

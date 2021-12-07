@@ -1,6 +1,11 @@
 from gradescopecalendar.gradescope.pyscope import GSConnection
-from gradescopecalendar.ical import ICal
-from gradescopecalendar.gcal import GCal
+from gradescopecalendar.calendars.ical import ICal
+from gradescopecalendar.calendars.gcal import GCal
+import logging
+
+
+logger = logging.getLogger(__name__)
+
 
 class GradescopeCalendar:
     """Interface for interacting with Gradescope and calendar applications.
@@ -15,17 +20,20 @@ class GradescopeCalendar:
         controls whether additional debug info is printed
     assignments_all : dict[]
         collection of all assignments from all courses on Gradescope
+
+    Methods
+    -------
+    write_to_ical()
+        creates an iCalendar file (.ics) of all assignment details
+    write_to_gcal()
+        connects to Google Calendar API and updates or creates Gradescope assignments
     """
 
-    def __init__(self, username: str, password: str, debug_on: bool = False):
-        self.username = username
-        self.password = password
-        self.DEBUG = debug_on
+    def __init__(self, email: str, password: str) -> None:
         self.assignments_all = {}
-        self._get_calendar_info()
+        self._get_calendar_info(email, password)
 
-
-    def _get_calendar_info(self) -> None:
+    def _get_calendar_info(self, email: str, password: str) -> None:
         """Connect to Gradescope and get assignment information."""
 
         # TODO: Cache assignment details in file to reduce requests to Gradescope?
@@ -33,8 +41,7 @@ class GradescopeCalendar:
         #       so only 1 request is made per course
 
         # Login to Gradescope
-        session = GSConnection()
-        session.login(self.username, self.password)
+        session = GSConnection(email, password)
 
         session.account.add_courses_in_account()
 
@@ -50,8 +57,7 @@ class GradescopeCalendar:
                 name = f"{assignment.name} - {assignment.course.name}"
                 self.assignments_all[name] = assignment
 
-            if self.DEBUG:
-                print(f"Done with course: {course.name}")
+            logger.debug(f"Done parsing course on Gradescope for: {course.name}")
 
     def write_to_ical(self, path: str = None) -> str:
         ical = ICal()

@@ -1,12 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from enum import Enum
-from .account import GSAccount
-
-
-class ConnState(Enum):
-    INIT = 0
-    LOGGED_IN = 1
+from gradescopecalendar.gradescope.account import GSAccount
 
 
 class GSConnection:
@@ -20,21 +14,24 @@ class GSConnection:
         the state of the connection: INIT or LOGGED_IN
     account : GSAccount
         the account object created after logging into Gradescope
-
-    Methods
-    -------
-    login(email, pwd)
-        logs into Gradescope using passed in credentials
     """
 
-    def __init__(self):
-        """Initialize the session for the connection."""
+    def __init__(self, email: str, password: str):
+        """Initialize the session for the connection to Gradescope.
+        
+        Parameters
+        ----------
+        email : str
+            the email address of the Gradescope account to login as
+        pwd : str
+            the password for the account
+        """
 
         self.session = requests.Session()
-        self.state = ConnState.INIT
         self.account = None
+        self._login(email, password)
 
-    def login(self, email: str, pwd: str) -> bool:
+    def _login(self, email: str, pwd: str) -> bool:
         """Login to Gradescope using passed in credentials.
 
         Note: some methods depend on account privillages
@@ -42,9 +39,14 @@ class GSConnection:
         Parameters
         ----------
         email : str
-            the email address to login as
+            the email address of the Gradescope account to login as
         pwd : str
             the password for the account
+        
+        Exceptions
+        ----------
+        ValueError
+            Invalid credentials for the Gradescope account.
         """
 
         # Get auth_token
@@ -76,7 +78,6 @@ class GSConnection:
             len(login_resp.history) != 0
             and login_resp.history[0].status_code == requests.codes.found
         ):
-            self.state = ConnState.LOGGED_IN
             self.account = GSAccount(self.session)
             return True
         raise ValueError("Invalid credentials.")
