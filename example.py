@@ -7,7 +7,7 @@ if __name__ == "__main__":
     EMAIL = ""
     PASSWORD = ""
     # Modify these for logging
-    LOGGING_ENABLED = False
+    LOGGING_ENABLED = True
     LOGGING_LEVEL = logging.DEBUG
     # Valid logging levels
     # logging.INFO, logging.DEBUG, logging.WARN, logging.CRITICAL
