@@ -64,12 +64,12 @@ if __name__ == "__main__":
     # logging.INFO, logging.DEBUG, logging.WARN, logging.CRITICAL
     # ------------------------------------------------------------ #
 
-    logger = logging.getLogger("gradescopecalendar" if LOGGING_ENABLED else __name__)
-    logger.setLevel(logging.DEBUG)
-    result = GradescopeCalendar(EMAIL, PASSWORD)
-    result.write_to_ical()
+    logger = logging.getLogger("gradescopecalendar" if LOGGING_ENABLED else None)
+    logger.setLevel(LOGGING_LEVEL)
+    calendar = GradescopeCalendar(EMAIL, PASSWORD)
+    calendar.write_to_ical()
     # Uncomment below to update Google Calendar directly
-    # result.write_to_gcal()
+    # calendar.write_to_gcal()
 ```
 
 Details about the application are written to the log file `gradescopecalendar.log` if enabled.
