@@ -6,7 +6,7 @@ This script scrapes your Gradescope account for courses and assignment details. 
 
 ## Requirements
 
-* Python 3.6 or above
+* Python 3.10 or above
 
 ## Installation
 
@@ -57,6 +57,8 @@ if __name__ == "__main__":
     # Modify these two fields with your Gradescope account details #
     EMAIL = ""
     PASSWORD = ""
+    IS_INSTRUCTOR = False  # If you are an instructor for **any** course,
+                           # modify this to True.
     # Modify these for logging
     LOGGING_ENABLED = True
     LOGGING_LEVEL = logging.DEBUG
@@ -66,7 +68,7 @@ if __name__ == "__main__":
 
     logger = logging.getLogger("gradescopecalendar" if LOGGING_ENABLED else None)
     logger.setLevel(LOGGING_LEVEL)
-    calendar = GradescopeCalendar(EMAIL, PASSWORD)
+    calendar = GradescopeCalendar(EMAIL, PASSWORD, IS_INSTRUCTOR)
     calendar.write_to_ical()
     # Uncomment below to update Google Calendar directly
     # calendar.write_to_gcal()
