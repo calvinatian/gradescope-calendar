@@ -24,7 +24,7 @@ class GSAccount:
         self.session = session
         self.courses = {}
 
-    def add_courses_in_account(self) -> None:
+    def add_courses_in_account(self, is_instructor: bool = False) -> None:
         """Finds all courses in the current user account and adds them"""
 
         # Get account page and parse it using bs4
@@ -33,7 +33,8 @@ class GSAccount:
 
         # Parameters
         ACCOUNT_COURSES_CLASS = "pageHeading"
-        ACCOUNT_COURSES_HEADING = "Your Courses"
+        # TODO:  Add way to add instructor courses to calendar?
+        ACCOUNT_COURSES_HEADING = "Student Courses" if is_instructor else "Your Courses"
         COURSE_CLASS = "courseBox"
         COURSE_SHORTNAME_CLASS = "courseBox--shortname"
         COURSE_NAME_CLASS = "courseBox--name"
@@ -42,6 +43,7 @@ class GSAccount:
             "h1",
             class_=ACCOUNT_COURSES_CLASS,
             string=ACCOUNT_COURSES_HEADING,
+            # text="Student Courses",
         ).next_sibling
 
         for course in courses.find_all("a", class_=COURSE_CLASS):

@@ -29,11 +29,14 @@ class GradescopeCalendar:
         connects to Google Calendar API and updates or creates Gradescope assignments
     """
 
-    def __init__(self, email: str, password: str) -> None:
+    def __init__(self, email: str, password: str, is_instructor: bool = False) -> None:
         self.assignments_all = {}
-        self._get_calendar_info(email, password)
+        self.is_instructor = is_instructor
+        self.email = email
+        self.password = password
+        self._get_calendar_info()
 
-    def _get_calendar_info(self, email: str, password: str) -> None:
+    def _get_calendar_info(self) -> None:
         """Connect to Gradescope and get assignment information."""
 
         # TODO: Cache assignment details in file to reduce requests to Gradescope?
@@ -41,9 +44,9 @@ class GradescopeCalendar:
         #       so only 1 request is made per course
 
         # Login to Gradescope
-        session = GSConnection(email, password)
+        session = GSConnection(self.email, self.password)
 
-        session.account.add_courses_in_account()
+        session.account.add_courses_in_account(self.is_instructor)
 
         # Dictionary of all assignments current in the calendar
         self.assignments_all = {}
