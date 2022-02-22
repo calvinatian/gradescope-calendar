@@ -6,7 +6,7 @@ This script scrapes your Gradescope account for courses and assignment details. 
 
 ## Requirements
 
-* Python 3.6 or above
+* Python 3.7 or above
 
 ## Installation
 
