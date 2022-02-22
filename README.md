@@ -13,16 +13,37 @@ This script scrapes your Gradescope account for courses and assignment details. 
 Windows
 
 ```bash
+python -m venv .venv
+.venv/Scripts/activate
 pip install gradescopecalendar
 ```
 
 Mac/Linux
 
 ```bash
+python3 -m venv .venv
+source venv/bin/activate
 pip3 install gradescopecalendar
 ```
 
+### Upgrade
+
+Windows
+
+```bash
+pip install --upgrade gradescopecalendar
+```
+
+Mac/Linux
+
+```bash
+pip3 install --upgrade gradescopecalendar
+```
+
+
 ### Development
+
+These steps are only necessary if you wish to install or work on the development version.
 
 Windows
 
@@ -39,8 +60,8 @@ Mac/Linux
 ```bash
 git clone https://github.com/calvinatian/gradescope-calendar.git
 cd gradescope-calendar
-python3 -m venv .venv
-.venv/Scripts/activate
+python3 -m venv venv
+source venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
