@@ -18,7 +18,7 @@ class GSConnection:
 
     def __init__(self, email: str, password: str):
         """Initialize the session for the connection to Gradescope.
-        
+
         Parameters
         ----------
         email : str
@@ -42,7 +42,7 @@ class GSConnection:
             the email address of the Gradescope account to login as
         pwd : str
             the password for the account
-        
+
         Exceptions
         ----------
         ValueError

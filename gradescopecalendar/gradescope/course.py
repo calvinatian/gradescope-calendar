@@ -95,5 +95,7 @@ class GSCourse:
                 close_date=close_date,
                 points=(points_earned, points_total),
                 regrades_on=regrades_on,
-                url=f"https://www.gradescope.com/courses/{self.cid}/assignments/{aid}/" if aid != INVALID_ASSIGNMENT_ID else "",
+                url=f"https://www.gradescope.com/courses/{self.cid}/assignments/{aid}/"
+                if aid != INVALID_ASSIGNMENT_ID
+                else "",
             )

@@ -121,7 +121,9 @@ class GCal:
         gs_cal = self._find_gradescope_calendar(service)
 
         # Loop through all current assignments on Google Calendar and get their info
-        current_assignments = self._get_gcal_current_assignments(service=service, gs_cal_id=gs_cal["id"])
+        current_assignments = self._get_gcal_current_assignments(
+            service=service, gs_cal_id=gs_cal["id"]
+        )
 
         # Loop through all assignments from Gradescope and update/create events in Google Calendar as needed
         # Priority given to Gradescope for {open time, close time, location}
@@ -172,7 +174,7 @@ class GCal:
                         logger.debug("End time will be updated")
                         current_assignments[name]["end"]["dateTime"] = end_time
                     event_mode = "update"
-                    event_body=current_assignments[name]
+                    event_body = current_assignments[name]
 
             # Create new event details
             elif assignment.close_date != EPOCHTIME:
@@ -196,7 +198,9 @@ class GCal:
                         service=service,
                         gs_cal_id=gs_cal["id"],
                         event_body=event_body,
-                        event_id=current_assignments[name].get("id", None) if name in current_assignments else None,
+                        event_id=current_assignments[name].get("id", None)
+                        if name in current_assignments
+                        else None,
                     )
                     time.sleep(0.25)  # Delay to help with rate limits
                 except ValueError as e:
