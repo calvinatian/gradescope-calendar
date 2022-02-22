@@ -8,6 +8,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 
+from __future__ import annotations
 
 # If modifying these scopes, delete the file token.json.
 # calendar                      See, edit, share, and permanently delete all the calendars you can access using Google Calendar

@@ -3,6 +3,8 @@ from pathlib import Path
 from icalendar import Calendar, Event
 from icalendar import vText
 
+from __future__ import annotations
+
 logger = logging.getLogger(__name__)
 
 

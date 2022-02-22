@@ -1,5 +1,7 @@
 import datetime
 
+from __future__ import annotations
+
 
 class GSAssignment:
     """

@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 from gradescopecalendar.gradescope.course import GSCourse
 import requests
 
+from __future__ import annotations
+
 
 class GSAccount:
     """A class used to govern Gradescope accounts.

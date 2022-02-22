@@ -3,6 +3,8 @@ import re
 from bs4 import BeautifulSoup
 from gradescopecalendar.gradescope.assignment import GSAssignment
 
+from __future__ import annotations
+
 
 class GSCourse:
     """A class used to govern Gradescope courses.
