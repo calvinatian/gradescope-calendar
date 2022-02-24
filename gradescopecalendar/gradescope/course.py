@@ -1,9 +1,9 @@
+from __future__ import annotations
+
 import requests
 import re
 from bs4 import BeautifulSoup
 from gradescopecalendar.gradescope.assignment import GSAssignment
-
-from __future__ import annotations
 
 
 class GSCourse:

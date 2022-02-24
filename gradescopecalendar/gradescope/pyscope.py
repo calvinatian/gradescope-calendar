@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 import requests
 from bs4 import BeautifulSoup
 from gradescopecalendar.gradescope.account import GSAccount
-
-from __future__ import annotations
 
 
 class GSConnection:

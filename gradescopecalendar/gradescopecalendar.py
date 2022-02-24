@@ -1,9 +1,9 @@
+from __future__ import annotations
+
+import logging
 from gradescopecalendar.gradescope.pyscope import GSConnection
 from gradescopecalendar.calendars.ical import ICal
 from gradescopecalendar.calendars.gcal import GCal
-import logging
-
-from __future__ import annotations
 
 logger = logging.getLogger(__name__)
 
