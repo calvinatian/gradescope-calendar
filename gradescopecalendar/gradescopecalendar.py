@@ -64,9 +64,9 @@ class GradescopeCalendar:
             logger.debug(f"Done parsing course on Gradescope for: {course.name}")
 
     def write_to_ical(self, path: str = None) -> str:
-        ical = ICal()
-        ical.write_to_ical(self.assignments_all, path)
+        self.ical = ICal()
+        self.ical.write_to_ical(self.assignments_all, path)
 
     def write_to_gcal(self) -> None:
-        gcal = GCal()
-        gcal.write_to_gcal(self.assignments_all)
+        self.gcal = GCal()
+        self.gcal.write_to_gcal(self.assignments_all)

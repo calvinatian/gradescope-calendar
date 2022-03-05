@@ -167,11 +167,11 @@ class GCal:
                         logger.debug("URL location will be updated")
                         current_assignments[name]["location"] = assignment.url
                     # Check if assignment open date exists and update if different from gcal
-                    elif is_different_start:
+                    if is_different_start:
                         logger.debug("Start time will be updated")
                         current_assignments[name]["start"]["dateTime"] = start_time
                     # Check if assignment close date exists and update if different from gcal
-                    elif is_different_end:
+                    if is_different_end:
                         logger.debug("End time will be updated")
                         current_assignments[name]["end"]["dateTime"] = end_time
                     event_mode = "update"
