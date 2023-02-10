@@ -50,7 +50,7 @@ class GSAccount:
 
         for course in courses.find_all("a", class_=COURSE_CLASS):
             short_name = course.find("h3", class_=COURSE_SHORTNAME_CLASS).text
-            name = course.find("h4", class_=COURSE_NAME_CLASS).text
+            name = course.find("div", class_=COURSE_NAME_CLASS).text
             cid = course.get("href").split("/")[-1]
 
             year = None
