@@ -4,6 +4,21 @@
 
 This script scrapes your Gradescope account for courses and assignment details. Assignment details currently can be transferred to iCalendar events (and then imported to other calendar applications such as Google Calendar). Another method exists to write these assignment details directly to a Google Calendar but requires additional setup. Scraping the Gradescope website is largely based off of the projects this is forked from.
 
+- [Gradescope-Calendar](#gradescope-calendar)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+    - [Upgrade](#upgrade)
+    - [Development](#development)
+  - [Usage](#usage)
+    - [Automatically running](#automatically-running)
+      - [Windows](#windows)
+      - [Linux](#linux)
+      - [Mac](#mac)
+  - [Advanced settings](#advanced-settings)
+    - [Google Calendar](#google-calendar)
+      - [Notes](#notes)
+    - [Future Plans](#future-plans)
+
 ## Requirements
 
 * Python 3.7 or above
@@ -21,7 +36,7 @@ pip install gradescopecalendar
 Mac/Linux
 
 ```bash
-python3 -m venv .venv
+python3 -m venv venv
 source venv/bin/activate
 pip3 install gradescopecalendar
 ```
@@ -96,6 +111,20 @@ if __name__ == "__main__":
 ```
 
 Details about the application are written to the log file `gradescopecalendar.log` if enabled.
+
+### Automatically running
+
+#### Windows
+
+Windows task scheduler
+
+#### Linux
+
+Cron
+
+#### Mac
+
+Launchd
 
 ## Advanced settings
 

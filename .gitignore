@@ -1,5 +1,8 @@
 # Custom
 
+# Builds
+gradescopecalendar-*/
+
 # Google Calendar
 credentials.json
 token.json
@@ -8,8 +11,6 @@ token.json
 old/
 docs/
 tests/
-gradescopecalendar/gradescope/README.md
-gradescopecalendar/gradescope/exceptions.py
 ical_test.py
 testing.py
 
