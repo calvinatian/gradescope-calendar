@@ -17,6 +17,7 @@ This script scrapes your Gradescope account for courses and assignment details. 
   - [Advanced settings](#advanced-settings)
     - [Google Calendar](#google-calendar)
       - [Notes](#notes)
+    - [CalDAV](#caldav)
     - [Future Plans](#future-plans)
 
 ## Requirements
@@ -201,6 +202,10 @@ Launchd
 * You might notice nothing being printed to the console when running the script. This is intentional. Enable logging and check the `gradescopecalendar.log` for details about the script progress.
 * The first run of writing to Google Calendar may take a while depending on how many assignments there are to create/modify. Subsequent runs should be much faster as only new or updated assignments will be created/modified.
 * Calendar events on the Gradescope calendar are never deleted, only created or updated. If the name of an assignment changes a new event will be created with the new name. Otherwise, if the start/end time or the location (URL of the assignment) of the event differ between Gradescope and Google Calendar, the event will be updated with the values from Gradescope. All other fields such as the description should remain unchanged.
+
+### CalDAV
+
+There is support for both `VEVENT` and `VTODO` in CalDAV. If you have `todo=True` ensure that your CalDAV server has VTODO support.
 
 ### Future Plans
 

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+
+from gradescopecalendar.calendars.caldav import CalDav
 from gradescopecalendar.gradescope.pyscope import GSConnection
 from gradescopecalendar.calendars.ical import ICal
 from gradescopecalendar.calendars.gcal import GCal
@@ -70,3 +72,14 @@ class GradescopeCalendar:
     def write_to_gcal(self) -> None:
         self.gcal = GCal()
         self.gcal.write_to_gcal(self.assignments_all)
+
+    def write_to_caldav(self, url, calName=None, username="", password="", todo=False) -> None:
+        self.caldav = CalDav()
+        self.caldav.write_to_caldav(
+            assignments_all=self.assignments_all,
+            url=url,
+            calName=calName,
+            username=username,
+            password=password,
+            todo=todo
+        )
