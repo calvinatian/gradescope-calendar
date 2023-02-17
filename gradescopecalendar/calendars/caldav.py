@@ -33,12 +33,12 @@ class CalDav:
             currentEvents: set[str] = self._get_caldav_current_assignments(calendar)
 
             for name, assignment in assignments_all.items():
-                if f"{name} | {assignment.url}" in currentEvents:
+                if f"{name} {assignment.url}" in currentEvents:
                     logger.debug(f"Skipped Assignment <{name}> as it is already present.")
                     continue
                 if vtodo:
                     calendar.save_todo(
-                        summary=f"{name} | {assignment.url}",
+                        summary=f"{name} {assignment.url}" if assignment.url else name,
                         due=assignment.close_date)
                 else:
                     calendar.save_event(
@@ -54,7 +54,7 @@ class CalDav:
         assignments = set()
 
         for event_raw in events_raw:
-            assignments.add(str(event_raw.vobject_instance.vevent.summary.value)+" | "+str(event_raw.vobject_instance.vevent.location.value))
+            assignments.add(f"{str(event_raw.vobject_instance.vevent.summary.value)} {str(event_raw.vobject_instance.vevent.location.value)}")
 
         for todo_raw in todos_raw:
             assignments.add(str(todo_raw.vobject_instance.vtodo.summary.value))
