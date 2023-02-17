@@ -27,5 +27,5 @@ if __name__ == "__main__":
     #     calName="Gradescope", # Create a calendar with this name (make sure it has VTODO support if you intend to use it)
     #     username="<nextcloud-user>",
     #     password="<nextcloud-app-password>",
-    #     todo=True # Whether to use VTODO properties as opposed to VEVENT properties (default False)
+    #     vtodo=True # Whether to use VTODO properties as opposed to VEVENT properties (default False)
     # )

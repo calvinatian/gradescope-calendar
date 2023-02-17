@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class CalDav:
-    def write_to_caldav(self, assignments_all: dict, url, calName, username, password, todo):
+    def write_to_caldav(self, assignments_all: dict, url, calName, username, password, vtodo):
         """Write assignment details to a CalDAV server.
 
         Parameters
@@ -19,7 +19,7 @@ class CalDav:
             the username of the CalDAV user
         password: str
             the password of the CalDAV user
-        todo: bool
+        vtodo: bool
             whether to add tasks to the calendar instead of events (default False)
         """
         with caldav.DAVClient(url=url, username=username, password=password) as client:
@@ -36,7 +36,7 @@ class CalDav:
                 if f"{name} | {assignment.url}" in currentEvents:
                     logger.debug(f"Skipped Assignment <{name}> as it is already present.")
                     continue
-                if todo:
+                if vtodo:
                     calendar.save_todo(
                         summary=f"{name} | {assignment.url}",
                         due=assignment.close_date)
