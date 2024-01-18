@@ -73,13 +73,12 @@ class GradescopeCalendar:
         self.gcal = GCal()
         self.gcal.write_to_gcal(self.assignments_all)
 
-    def write_to_caldav(self, url, calName=None, username="", password="", vtodo=False) -> None:
+    def write_to_caldav(self, url, calName=None, username="", password="") -> None:
         self.caldav = CalDav()
         self.caldav.write_to_caldav(
             assignments_all=self.assignments_all,
             url=url,
             calName=calName,
             username=username,
-            password=password,
-            vtodo=vtodo
+            password=password
         )

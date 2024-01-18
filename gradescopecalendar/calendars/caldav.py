@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class CalDav:
-    def write_to_caldav(self, assignments_all: dict, url, calName, username, password, vtodo):
+    def write_to_caldav(self, assignments_all: dict, url, calName, username, password):
         """Write assignment details to a CalDAV server.
 
         Parameters
@@ -19,8 +19,6 @@ class CalDav:
             the username of the CalDAV user
         password: str
             the password of the CalDAV user
-        vtodo: bool
-            whether to add tasks to the calendar instead of events (default False)
         """
         with caldav.DAVClient(url=url, username=username, password=password) as client:
             calendar: caldav.Calendar
@@ -36,16 +34,11 @@ class CalDav:
                 if f"{name} {assignment.url}" in currentEvents:
                     logger.debug(f"Skipped Assignment <{name}> as it is already present.")
                     continue
-                if vtodo:
-                    calendar.save_todo(
-                        summary=f"{name} {assignment.url}" if assignment.url else name,
-                        due=assignment.close_date)
-                else:
-                    calendar.save_event(
-                        summary=name,
-                        location=assignment.url,
-                        dtstart=assignment.close_date,
-                        dtend=assignment.close_date)
+                calendar.save_event(
+                    summary=name,
+                    location=assignment.url,
+                    dtstart=assignment.close_date,
+                    dtend=assignment.close_date)
                 logger.debug(f"Wrote New Assignment <{name}> to CalDAV")
 
     def _get_caldav_current_assignments(self, calendar: caldav.Calendar) -> set[str]:
@@ -55,8 +48,5 @@ class CalDav:
 
         for event_raw in events_raw:
             assignments.add(f"{str(event_raw.vobject_instance.vevent.summary.value)} {str(event_raw.vobject_instance.vevent.location.value)}")
-
-        for todo_raw in todos_raw:
-            assignments.add(str(todo_raw.vobject_instance.vtodo.summary.value))
 
         return assignments

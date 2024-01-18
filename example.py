@@ -24,8 +24,7 @@ if __name__ == "__main__":
     # Uncomment below to write to a CalDAV server (this example assumes a nextcloud server)
     # calendar.write_to_caldav(
     #     url="https://<nextcloud-hostname>/remote.php/dav/calendars/<nextcloud-user>/",
-    #     calName="Gradescope", # Create a calendar with this name (make sure it has VTODO support if you intend to use it)
+    #     calName="Gradescope", # Create a calendar with this name
     #     username="<nextcloud-user>",
-    #     password="<nextcloud-app-password>",
-    #     vtodo=True # Whether to use VTODO properties as opposed to VEVENT properties (default False)
+    #     password="<nextcloud-app-password>"
     # )
