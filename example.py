@@ -21,3 +21,10 @@ if __name__ == "__main__":
     calendar.write_to_ical()
     # Uncomment below to update Google Calendar directly
     # calendar.write_to_gcal()
+    # Uncomment below to write to a CalDAV server (this example assumes a nextcloud server)
+    # calendar.write_to_caldav(
+    #     url="https://<nextcloud-hostname>/remote.php/dav/calendars/<nextcloud-user>/",
+    #     calName="Gradescope", # Create a calendar with this name
+    #     username="<nextcloud-user>",
+    #     password="<nextcloud-app-password>"
+    # )
